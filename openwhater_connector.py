@@ -9,7 +9,7 @@ load_dotenv()
 OPENWEATHERAPI_KEY = os.getenv("OPENWEATHERAPI_KEY")
 # Function to get weather data from OpenWeatherAPI
 def get_weather_data(city: str, country: str):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid={OPENWEATHERAPI_KEY}"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{country}&units=metric&appid={OPENWEATHERAPI_KEY}"
     response =  requests.get(url=url)
     # Handle error if city or country is not found
     if response.status_code != 200:
@@ -18,7 +18,7 @@ def get_weather_data(city: str, country: str):
     return response.json()
 
 async def get_weather_data_asc(city: str, country: str):
-    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{country}&appid={OPENWEATHERAPI_KEY}"
+    url = f"http://api.openweathermap.org/data/2.5/weather?q={city},{country}&units=metric&appid={OPENWEATHERAPI_KEY}"
     async with aiohttp.ClientSession() as session:
         async with session.get(url) as response:
             if response.status!=200:
