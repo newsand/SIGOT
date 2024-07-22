@@ -3,7 +3,8 @@ import requests
 import asyncio
 import os
 from dotenv import load_dotenv
-
+from fastapi import HTTPException
+from requests import RequestException
 
 load_dotenv()
 OPENWEATHERAPI_KEY = os.getenv("OPENWEATHERAPI_KEY")
@@ -24,6 +25,8 @@ async def get_weather_data_asc(city: str, country: str):
             if response.status!=200:
                 raise ValueError("city or country not found")
             return await response.json()
+
+
 # Create and run the event loop
 async def main():
     try:
@@ -34,9 +37,7 @@ async def main():
     except RequestException as e:
         print(f"Network Error: {e}")
 
-
 if __name__ == "__main__":
 
-    weather_data = get_weather_data("Belo Horizonte", "Brazil")
+    #weather_data = get_weather_data("Belo Horizonte", "Brazil")
     asyncio.run(main())
-    print(weather_data)

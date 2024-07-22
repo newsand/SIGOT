@@ -26,7 +26,7 @@ async def should_i(weather_request: WeatherRequest):
         weather_data = await get_weather_data_asc(weather_request.city, weather_request.country)
         feels_like = weather_data['main']['feels_like']
         humidity = weather_data['main']['humidity']
-        rain = weather_data['rain']['3h'] if 'rain' in weather_data else 0
+        rain = weather_data['rain'] if 'rain' in weather_data else 0
         wind = weather_data['wind']['speed']
         description = weather_data['weather'][0]['description']
     except HTTPException as e:
@@ -35,13 +35,14 @@ async def should_i(weather_request: WeatherRequest):
         return JSONResponse(content={"message": "Something went wrong. Please try again later."}, status_code=500)
     prompt = (f"Should I go outside today? The weather is {description}, \
               and the temperature feels like {feels_like:.1f}°C.,\
-              and the wind speed is {wind:.1f}, \
-              and raining chance / hour is {rain:.1f},\
-              and the humidity is {humidity:.1f}°C.\
+              and the wind speed is {wind:.1f} km/h, \
+              and raining is by hour in mm/h {rain:},\
+              and the humidity is {humidity:.1f} %.\
               answer in {weather_request.lang}")
     print(prompt)
     gemni_response = await connector.send_prompt_asc(prompt)
     return gemni_response
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
